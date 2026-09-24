@@ -16,7 +16,7 @@ const WorkoutLibrary = () => {
         setLoading(true);
         const response = await fetch("https://api.abcz.workers.dev/api/fitlog");
         if (!response.ok) {
-          throw new Error;
+          throw new Error("Failed to fetch");
         }
         const data = await response.json();
         setWorkouts(data);
@@ -30,19 +30,14 @@ const WorkoutLibrary = () => {
     fetchWorkouts();
   }, []);
 
-  
-  const parseDuration = (dur: string) => {
-    if (!dur) return 0;
-    const num = parseInt(dur, 10);
-    return isNaN(num) ? 0 : num;
-  };
-
   const sortedWorkouts = [...workouts].sort((a, b) => {
     if (sortBy === "duration") {
-      return parseDuration(b.duration) - parseDuration(a.duration);
+      return (Number(b.duration) || 0) - (Number(a.duration) || 0);
     }
     if (sortBy === "calories") {
-      return (Number(b.calories) || 0) - (Number(a.calories) || 0);
+      const calB = Number(b.caloriesBurned ?? b.calories ?? 0);
+      const calA = Number(a.caloriesBurned ?? a.calories ?? 0);
+      return calB - calA;
     }
     if (sortBy === "rating") {
       return (Number(b.rating) || 0) - (Number(a.rating) || 0);
@@ -51,7 +46,7 @@ const WorkoutLibrary = () => {
   });
 
   return (
-    <section className="container mx-auto my-16 px-4">
+    <section id="library" className="container mx-auto my-16 px-4">
       <div className="mb-10 flex flex-col items-center justify-between gap-6 md:flex-row md:items-end border-b border-slate-800 pb-6">
         <div className="text-center md:text-left">
           <p className="mb-2 text-xs font-bold uppercase tracking-widest text-[#CCFF00]">
@@ -87,7 +82,6 @@ const WorkoutLibrary = () => {
         </div>
       </div>
 
-     
       {loading ? (
         <div className="flex flex-col items-center justify-center py-24">
           <div className="h-12 w-12 animate-spin rounded-full border-4 border-slate-800 border-t-[#CCFF00]"></div>
@@ -96,7 +90,6 @@ const WorkoutLibrary = () => {
           </p>
         </div>
       ) : (
-  
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {sortedWorkouts.map((workout: IWorkout) => (
             <WorkoutCard key={workout.id} workout={workout} />
