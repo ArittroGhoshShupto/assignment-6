@@ -15,8 +15,6 @@ const Navbar = () => {
       className={`${oswald.className} bg-[#0D0E12] border-b border-slate-800 py-2`}
     >
       <div className="navbar container mx-auto px-4">
-
-        {/* Logo */}
         <div className="navbar-start">
           <Link href="/" className="flex items-center gap-2.5">
             <Image
@@ -32,21 +30,17 @@ const Navbar = () => {
             </span>
           </Link>
         </div>
-
-        {/* Center Navigation */}
         <div className="navbar-center hidden md:flex">
-          <div className="flex items-center gap-1 rounded-full border border-slate-800 bg-[#15171C] p-1 text-xs font-semibold">
-
+          <div className="flex items-center gap-4 text-xs font-semibold">
             <Link
               href="/"
               className="rounded-full bg-[#CCFF00] px-4 py-1.5 font-extrabold text-black"
             >
               Workouts
             </Link>
-
             <Link
               href="/my-plan"
-              className="rounded-full px-4 py-1.5 text-gray-400 transition hover:text-white"
+              className="px-1 py-1.5 font-semibold text-white transition hover:text-[#CCFF00]"
             >
               My Plan
             </Link>
@@ -54,36 +48,31 @@ const Navbar = () => {
           </div>
         </div>
 
-        {/* Right Navigation */}
-        <div className="navbar-end hidden gap-2 md:flex">
+        <div className="navbar-end hidden items-center gap-4 md:flex">
 
-          {/* Plan */}
           <Link
             href="/my-plan"
-            className="flex items-center gap-1.5 rounded-full bg-[#CCFF00] px-3.5 py-1 text-xs font-black uppercase text-black"
+            className="flex items-center gap-1.5 text-xs font-black uppercase text-white"
           >
             <span>Plan</span>
 
-            <span className="flex h-4 w-4 items-center justify-center rounded-full bg-black text-[10px] font-extrabold text-[#CCFF00]">
+            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#CCFF00] text-[10px] font-extrabold text-black">
               0
             </span>
           </Link>
 
-          {/* Saved */}
           <Link
             href="/my-plan"
-            className="flex items-center gap-1.5 rounded-full border border-slate-700 bg-[#15171C] px-3.5 py-1 text-xs font-bold uppercase text-gray-200"
+            className="flex items-center gap-1.5 text-xs font-bold uppercase text-white"
           >
             <span>Saved</span>
 
-            <span className="flex h-4 w-4 items-center justify-center rounded-full bg-slate-800 text-[10px] font-bold text-white">
+            <span className="flex h-5 w-5 items-center justify-center rounded-full border border-slate-600 bg-transparent text-[10px] font-bold text-white">
               0
             </span>
           </Link>
 
         </div>
-
-        {/* Mobile Menu */}
         <div className="navbar-end md:hidden">
           <div className="dropdown dropdown-end">
 
