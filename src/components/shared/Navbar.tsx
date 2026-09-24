@@ -1,12 +1,12 @@
-import Image from "next/image";
-import React from "react";
-import logo from "../../../assets/logo.png";
-import Link from "next/link";
-import { Oswald } from "next/font/google";
+import Image from "next/image"
+import React from "react"
+import logo from "../../../assets/logo.png"
+import Link from "next/link"
+import { Oswald } from "next/font/google"
 
 const oswald = Oswald({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "500", "600", "700"]
 });
 
 const Navbar = () => {
@@ -25,7 +25,7 @@ const Navbar = () => {
               className="h-8 w-8 object-contain"
             />
 
-            <span className="text-xl font-extrabold tracking-wider text-white uppercase">
+            <span className="text-xl `font-[family-name:var(--font-oswald)] tracking-wider text-white uppercase">
               FITLOG
             </span>
           </Link>
@@ -34,7 +34,7 @@ const Navbar = () => {
           <div className="flex items-center gap-4 text-xs font-semibold">
             <Link
               href="/"
-              className="rounded-full bg-[#CCFF00] px-4 py-1.5 font-extrabold text-black"
+              className="rounded-full bg-[#CCFF00] px-4 py-1.5 `font-[family-name:var(--font-oswald)] text-black"
             >
               Workouts
             </Link>
