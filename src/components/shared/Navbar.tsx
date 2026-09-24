@@ -2,13 +2,21 @@ import Image from "next/image";
 import React from "react";
 import logo from "../../../assets/logo.png";
 import Link from "next/link";
+import { Oswald } from "next/font/google";
+
+const oswald = Oswald({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
 
 const Navbar = () => {
   return (
-    <nav className="bg-[#0D0E12] border-b border-slate-800 py-2">
+    <nav
+      className={`${oswald.className} bg-[#0D0E12] border-b border-slate-800 py-2`}
+    >
       <div className="navbar container mx-auto px-4">
 
-        
+        {/* Logo */}
         <div className="navbar-start">
           <Link href="/" className="flex items-center gap-2.5">
             <Image
@@ -19,13 +27,13 @@ const Navbar = () => {
               className="h-8 w-8 object-contain"
             />
 
-            <span className="font-oswald text-xl font-extrabold italic tracking-wider text-white uppercase">
+            <span className="text-xl font-extrabold tracking-wider text-white uppercase">
               FITLOG
             </span>
           </Link>
         </div>
 
-       
+        {/* Center Navigation */}
         <div className="navbar-center hidden md:flex">
           <div className="flex items-center gap-1 rounded-full border border-slate-800 bg-[#15171C] p-1 text-xs font-semibold">
 
@@ -46,9 +54,10 @@ const Navbar = () => {
           </div>
         </div>
 
-        
+        {/* Right Navigation */}
         <div className="navbar-end hidden gap-2 md:flex">
 
+          {/* Plan */}
           <Link
             href="/my-plan"
             className="flex items-center gap-1.5 rounded-full bg-[#CCFF00] px-3.5 py-1 text-xs font-black uppercase text-black"
@@ -60,6 +69,7 @@ const Navbar = () => {
             </span>
           </Link>
 
+          {/* Saved */}
           <Link
             href="/my-plan"
             className="flex items-center gap-1.5 rounded-full border border-slate-700 bg-[#15171C] px-3.5 py-1 text-xs font-bold uppercase text-gray-200"
@@ -73,7 +83,7 @@ const Navbar = () => {
 
         </div>
 
-        
+        {/* Mobile Menu */}
         <div className="navbar-end md:hidden">
           <div className="dropdown dropdown-end">
 
