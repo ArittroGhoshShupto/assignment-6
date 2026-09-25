@@ -105,8 +105,9 @@ const ListedWorkoutCard = ({
         </div>
 
         <div className="mt-6 flex flex-wrap items-center gap-3">
+          {/* Fixed Routing Path (/workouts/${workout.id}) */}
           <Link
-            href={`/workout/${workout.id}`}
+            href={`/workouts/${workout.id}`}
             className="flex-1 sm:flex-none text-center rounded-xl bg-[#CCFF00] px-5 py-2.5 text-sm font-bold text-black transition-all hover:bg-[#b8e600] active:scale-95"
           >
             View Details →

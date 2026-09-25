@@ -1,26 +1,34 @@
 import React from "react";
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
+import Link from "next/link";
+import { Oswald } from "next/font/google";
 import logo from "../../../assets/logo.png";
 
-const Footer = () => {
+const oswald = Oswald({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
+
+const Footer: React.FC = () => {
   return (
-    <footer className="w-full bg-[#0D0E12] border-t border-slate-800/80 py-8 mt-16 `font-[family-name:var(--font-oswald)]`">
+    <footer
+      className={`${oswald.className} w-full bg-[#0D0E12] border-t border-slate-800 py-6 mt-16`}
+    >
       <div className="container mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
-        
-        <div className="flex items-center gap-2.5">
+       
+        <Link href="/" className="flex items-center gap-2.5">
           <Image
-            src={logo}
+            src={logo as StaticImageData}
             alt="FITLOG Logo"
-            width={24}
-            height={24}
+            width={32}
+            height={32}
             className="h-8 w-8 object-contain"
           />
-
-          <span className="text-xl `font-[family-name:var(--font-oswald)] text-white uppercase">
+          <span className="text-xl font-extrabold tracking-wider text-white uppercase">
             FITLOG
           </span>
-        </div>
-        <p className="text-gray-400 text-xs sm:text-sm font-medium tracking-wide font-sans">
+        </Link>
+        <p className="text-gray-400 text-xs sm:text-sm font-medium tracking-wide">
           © 2026 FitLog — Workout Library. Train hard, log honest.
         </p>
 

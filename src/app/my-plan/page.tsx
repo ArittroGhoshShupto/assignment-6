@@ -16,8 +16,8 @@ const emptySubscribe = () => () => {};
 const useIsMounted = () => {
   return useSyncExternalStore(
     emptySubscribe,
-    () => true, 
-    () => false,
+    () => true,
+    () => false
   );
 };
 
@@ -51,6 +51,7 @@ export default function MyPlanPage() {
       return 0;
     });
   }, [currentList, sortBy]);
+
   const safeTodayPlan = mounted ? todayPlan : [];
   const safeSortedList = mounted ? sortedList : [];
 
