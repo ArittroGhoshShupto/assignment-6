@@ -72,16 +72,19 @@ export const PlanProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const toggleMarkAsDone = (id: string | number) => {
+    let updatedState = false;
+
     setTodayPlan((prev) =>
       prev.map((item) => {
         if (item.id === id) {
-          const updatedState = !item.isDone;
-          toast.success(updatedState ? "Marked as Done!" : "Unmarked status");
+          updatedState = !item.isDone;
           return { ...item, isDone: updatedState };
         }
         return item;
       })
     );
+
+    toast.success(updatedState ? "Marked as Done!" : "Unmarked status");
   };
 
   const saveForLater = (workout: IWorkout) => {
