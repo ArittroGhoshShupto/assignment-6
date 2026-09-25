@@ -22,6 +22,8 @@ const ListedWorkoutCard = ({
     ? workout.category
     : workout.category
     ? [workout.category]
+    : Array.isArray(workout.muscleGroups)
+    ? workout.muscleGroups
     : [];
 
   const primaryCategory = categories[0] || "WORKOUT";
@@ -34,8 +36,8 @@ const ListedWorkoutCard = ({
     >
       <div className="relative h-64 w-full shrink-0 overflow-hidden bg-[#1D2026] sm:h-auto sm:w-72">
         <Image
-          src={workout.image}
-          alt={workout.name}
+          src={workout.image || ""}
+          alt={workout.name || "Workout Image"}
           width={450}
           height={450}
           className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
@@ -60,19 +62,21 @@ const ListedWorkoutCard = ({
           </div>
 
           <h2 className="text-2xl font-bold text-white transition-colors group-hover:text-[#CCFF00] md:text-3xl">
-            {workout.name?.toUpperCase()}
+            {workout.name?.toUpperCase() || "WORKOUT"}
           </h2>
 
           <p className="mt-1 text-sm text-gray-400 md:text-base">
             Equipment:{" "}
             <span className="font-semibold text-gray-200">
-              {workout.equipment}
+              {workout.equipment || "Bodyweight"}
             </span>
           </p>
 
           <div className="mt-3 flex items-center gap-2">
             <span className="text-lg text-[#CCFF00]">★</span>
-            <span className="font-semibold text-white">{workout.rating}</span>
+            <span className="font-semibold text-white">
+              {workout.rating ?? 5.0}
+            </span>
             <span className="text-sm text-gray-500">/ 5.0</span>
           </div>
 
@@ -80,7 +84,7 @@ const ListedWorkoutCard = ({
             <div>
               <p className="text-xs text-gray-500">Duration</p>
               <p className="mt-1 font-bold text-white">
-                {workout.duration} min
+                {workout.duration || 0} min
               </p>
             </div>
 
@@ -94,7 +98,7 @@ const ListedWorkoutCard = ({
             <div>
               <p className="text-xs text-gray-500">Equipment</p>
               <p className="mt-1 truncate font-bold text-white">
-                {workout.equipment}
+                {workout.equipment || "Bodyweight"}
               </p>
             </div>
           </div>
@@ -102,7 +106,7 @@ const ListedWorkoutCard = ({
 
         <div className="mt-6 flex flex-wrap items-center gap-3">
           <Link
-            href={`/workouts/${workout.id}`}
+            href={`/workout/${workout.id}`}
             className="flex-1 sm:flex-none text-center rounded-xl bg-[#CCFF00] px-5 py-2.5 text-sm font-bold text-black transition-all hover:bg-[#b8e600] active:scale-95"
           >
             View Details →
