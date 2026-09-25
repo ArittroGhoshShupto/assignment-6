@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useSyncExternalStore } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -13,9 +13,19 @@ const oswald = Oswald({
   weight: ["400", "500", "600", "700"],
 });
 
+const emptySubscribe = () => () => {};
+const useIsMounted = () => {
+  return useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false ,
+  );
+};
+
 const Navbar = () => {
   const pathname = usePathname();
   const { todayPlan, savedPlan } = usePlan();
+  const mounted = useIsMounted();
 
   return (
     <nav
@@ -23,7 +33,6 @@ const Navbar = () => {
     >
       <div className="navbar container mx-auto px-4">
         
-        {/* Navbar Start */}
         <div className="navbar-start">
           <Link href="/" className="flex items-center gap-2.5">
             <Image
@@ -65,7 +74,6 @@ const Navbar = () => {
           </div>
         </div>
 
-        {/* Navbar End (Desktop) */}
         <div className="navbar-end hidden items-center gap-4 md:flex">
           <Link
             href="/my-plan"
@@ -73,7 +81,7 @@ const Navbar = () => {
           >
             <span>Plan</span>
             <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#CCFF00] text-[10px] font-extrabold text-black">
-              {todayPlan?.length || 0}
+              {mounted ? todayPlan?.length || 0 : 0}
             </span>
           </Link>
 
@@ -83,12 +91,11 @@ const Navbar = () => {
           >
             <span>Saved</span>
             <span className="flex h-5 w-5 items-center justify-center rounded-full border border-slate-600 bg-transparent text-[10px] font-bold text-white">
-              {savedPlan?.length || 0}
+              {mounted ? savedPlan?.length || 0 : 0}
             </span>
           </Link>
         </div>
 
-        {/* Navbar End (Mobile Dropdown) */}
         <div className="navbar-end md:hidden">
           <div className="dropdown dropdown-end">
             <div
@@ -140,7 +147,7 @@ const Navbar = () => {
                 <Link href="/my-plan" className="flex justify-between items-center">
                   <span>Plan</span>
                   <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#CCFF00] text-[10px] font-extrabold text-black">
-                    {todayPlan?.length || 0}
+                    {mounted ? todayPlan?.length || 0 : 0}
                   </span>
                 </Link>
               </li>
@@ -149,7 +156,7 @@ const Navbar = () => {
                 <Link href="/my-plan" className="flex justify-between items-center">
                   <span>Saved</span>
                   <span className="flex h-5 w-5 items-center justify-center rounded-full border border-slate-600 bg-transparent text-[10px] font-bold text-white">
-                    {savedPlan?.length || 0}
+                    {mounted ? savedPlan?.length || 0 : 0}
                   </span>
                 </Link>
               </li>
@@ -161,5 +168,4 @@ const Navbar = () => {
     </nav>
   );
 };
-
 export default Navbar;

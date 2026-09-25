@@ -7,8 +7,28 @@ import { IWorkout } from "@/types/fitlog.type";
 
 type SortOption = "default" | "duration" | "calories" | "rating";
 
-// Figma design layout strictly follows this ID sequence
 const figmaIdOrder = [1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 7, 12];
+
+const WorkoutSkeleton = () => (
+  <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    {Array.from({ length: 6 }).map((_, i) => (
+      <div
+        key={i}
+        className="bg-[#15171C] border border-slate-800 rounded-2xl p-4 animate-pulse flex flex-col justify-between `h-[360px]"
+      >
+        <div className="w-full h-44 bg-slate-800/60 rounded-xl mb-4" />
+        <div className="h-4 w-20 bg-slate-800/80 rounded-full mb-3" />
+        <div className="h-6 w-3/4 bg-slate-800/80 rounded mb-2" />
+        <div className="h-4 w-1/2 bg-slate-800/50 rounded mb-4" />
+        <div className="flex justify-between items-center pt-3 border-t border-slate-800/60">
+          <div className="h-4 w-12 bg-slate-800/60 rounded" />
+          <div className="h-4 w-12 bg-slate-800/60 rounded" />
+          <div className="h-4 w-12 bg-slate-800/60 rounded" />
+        </div>
+      </div>
+    ))}
+  </div>
+);
 
 const WorkoutLibrary = () => {
   const [workouts, setWorkouts] = useState<IWorkout[]>([]);
@@ -39,8 +59,7 @@ const WorkoutLibrary = () => {
   const filteredWorkouts = (workouts || []).filter((w) => {
     if (!w) return false;
     const query = searchQuery.toLowerCase();
-    
-    // Double type-casting (unknown -> object) to prevent TypeScript conversion error
+
     const workoutObj = w as unknown as { muscleGroups?: string[]; category?: string | string[] };
     const rawCategories = workoutObj.muscleGroups || w.category || [];
     const categories = Array.isArray(rawCategories)
@@ -55,7 +74,6 @@ const WorkoutLibrary = () => {
   });
 
   const sortedWorkouts = [...filteredWorkouts].sort((a, b) => {
-    // 1. Default Option: Order by Figma exact UI ID sequence
     if (sortBy === "default") {
       const indexA = figmaIdOrder.indexOf(Number(a.id));
       const indexB = figmaIdOrder.indexOf(Number(b.id));
@@ -67,19 +85,16 @@ const WorkoutLibrary = () => {
       return Number(a.id || 0) - Number(b.id || 0);
     }
 
-    // 2. Duration Sort
     if (sortBy === "duration") {
       return (Number(b.duration) || 0) - (Number(a.duration) || 0);
     }
 
-    // 3. Calories Sort
     if (sortBy === "calories") {
       const calB = Number(b.caloriesBurned ?? b.calories ?? 0);
       const calA = Number(a.caloriesBurned ?? a.calories ?? 0);
       return calB - calA;
     }
 
-    // 4. Rating Sort
     if (sortBy === "rating") {
       return (Number(b.rating) || 0) - (Number(a.rating) || 0);
     }
@@ -135,12 +150,7 @@ const WorkoutLibrary = () => {
       </div>
 
       {loading ? (
-        <div className="flex flex-col items-center justify-center py-24">
-          <div className="h-12 w-12 animate-spin rounded-full border-4 border-slate-800 border-t-[#CCFF00]"></div>
-          <p className="mt-4 text-sm font-semibold tracking-wide text-gray-400 animate-pulse">
-            Loading workouts...
-          </p>
-        </div>
+        <WorkoutSkeleton />
       ) : sortedWorkouts.length === 0 ? (
         <div className="py-20 text-center font-sans text-gray-400">
           No workouts found matching &quot;{searchQuery}&quot;

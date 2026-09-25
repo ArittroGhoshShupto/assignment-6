@@ -16,35 +16,28 @@ interface PlanContextType {
 
 const PlanContext = createContext<PlanContextType | undefined>(undefined);
 
+// Helper function for lazy initialization (Runs only once on client mount)
+const getStorageItem = <T,>(key: string, defaultValue: T): T => {
+  if (typeof window === "undefined") return defaultValue;
+  try {
+    const item = localStorage.getItem(key);
+    return item ? JSON.parse(item) : defaultValue;
+  } catch (e) {
+    console.error(`Error reading ${key} from localStorage:`, e);
+    return defaultValue;
+  }
+};
+
 export const PlanProvider = ({ children }: { children: React.ReactNode }) => {
-  const [todayPlan, setTodayPlan] = useState<IWorkout[]>(() => {
-    if (typeof window !== "undefined") {
-      const savedToday = localStorage.getItem("fitlog_today");
-      if (savedToday) {
-        try {
-          return JSON.parse(savedToday);
-        } catch (e) {
-          console.error(e);
-        }
-      }
-    }
-    return [];
-  });
+  // Lazy initial state - Reads localStorage directly on mount (No Effect needed)
+  const [todayPlan, setTodayPlan] = useState<IWorkout[]>(() =>
+    getStorageItem("fitlog_today", [])
+  );
+  const [savedPlan, setSavedPlan] = useState<IWorkout[]>(() =>
+    getStorageItem("fitlog_saved", [])
+  );
 
-  const [savedPlan, setSavedPlan] = useState<IWorkout[]>(() => {
-    if (typeof window !== "undefined") {
-      const savedList = localStorage.getItem("fitlog_saved");
-      if (savedList) {
-        try {
-          return JSON.parse(savedList);
-        } catch (e) {
-          console.error(e);
-        }
-      }
-    }
-    return [];
-  });
-
+  // Sync to LocalStorage ONLY when state changes
   useEffect(() => {
     localStorage.setItem("fitlog_today", JSON.stringify(todayPlan));
   }, [todayPlan]);

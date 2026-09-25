@@ -5,9 +5,9 @@ import React from "react";
 export default function HomePage() {
   return (
     <main className="min-h-screen bg-[#0D0E12] text-white `font-[family-name:var(--font-oswald)]">
-      <Banner />
+      <Banner/>
       <section id="library" className="scroll-mt-16">
-        <WorkoutLibrary />
+        <WorkoutLibrary/>
       </section>
     </main>
   );
