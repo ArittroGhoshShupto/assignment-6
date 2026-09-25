@@ -18,8 +18,7 @@ const ListedWorkoutCard = ({
   onMarkAsDone,
   onRemove,
 }: IListedWorkoutCardProps) => {
-  
-  const categories = Array.isArray(workout.category)
+  const categories: string[] = Array.isArray(workout.category)
     ? workout.category
     : workout.category
     ? [workout.category]
@@ -33,8 +32,7 @@ const ListedWorkoutCard = ({
         isCompleted ? "opacity-75 border-green-900/50" : ""
       }`}
     >
-      
-      <div className="relative h-64 w-full shrink-0 overflow-hidden bg-[#1D2026] sm:h-auto sm:w-75">
+      <div className="relative h-64 w-full shrink-0 overflow-hidden bg-[#1D2026] sm:h-auto sm:w-72">
         <Image
           src={workout.image}
           alt={workout.name}
@@ -43,18 +41,15 @@ const ListedWorkoutCard = ({
           className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
         />
 
-        
         <span className="absolute left-4 top-4 rounded-full bg-[#CCFF00] px-3 py-1 text-xs font-bold text-black uppercase">
           {primaryCategory}
         </span>
       </div>
 
-      
       <div className="flex flex-1 flex-col justify-between p-6 md:p-8">
         <div>
-         
           <div className="mb-3 flex flex-wrap gap-2">
-            {categories.map((cat, idx) => (
+            {categories.map((cat: string, idx: number) => (
               <span
                 key={idx}
                 className="rounded-full border border-[#CCFF00] px-3 py-1 text-xs font-semibold text-[#CCFF00]"
@@ -64,12 +59,10 @@ const ListedWorkoutCard = ({
             ))}
           </div>
 
-          
           <h2 className="text-2xl font-bold text-white transition-colors group-hover:text-[#CCFF00] md:text-3xl">
             {workout.name?.toUpperCase()}
           </h2>
 
-         
           <p className="mt-1 text-sm text-gray-400 md:text-base">
             Equipment:{" "}
             <span className="font-semibold text-gray-200">
@@ -77,14 +70,12 @@ const ListedWorkoutCard = ({
             </span>
           </p>
 
-          
           <div className="mt-3 flex items-center gap-2">
             <span className="text-lg text-[#CCFF00]">★</span>
             <span className="font-semibold text-white">{workout.rating}</span>
             <span className="text-sm text-gray-500">/ 5.0</span>
           </div>
 
-          
           <div className="mt-5 grid grid-cols-2 gap-4 border-y border-slate-800 py-4 sm:grid-cols-3">
             <div>
               <p className="text-xs text-gray-500">Duration</p>
@@ -96,7 +87,7 @@ const ListedWorkoutCard = ({
             <div>
               <p className="text-xs text-gray-500">Calories</p>
               <p className="mt-1 font-bold text-white">
-                {workout.calories} kcal
+                {workout.caloriesBurned ?? workout.calories ?? 0} kcal
               </p>
             </div>
 
@@ -109,9 +100,7 @@ const ListedWorkoutCard = ({
           </div>
         </div>
 
-        
         <div className="mt-6 flex flex-wrap items-center gap-3">
-         
           <Link
             href={`/workouts/${workout.id}`}
             className="flex-1 sm:flex-none text-center rounded-xl bg-[#CCFF00] px-5 py-2.5 text-sm font-bold text-black transition-all hover:bg-[#b8e600] active:scale-95"
@@ -119,7 +108,6 @@ const ListedWorkoutCard = ({
             View Details →
           </Link>
 
-          
           {onMarkAsDone && (
             <button
               onClick={() => onMarkAsDone(workout.id)}
