@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, useSyncExternalStore } from "react";
+import React, { useState, useMemo, useSyncExternalStore, useEffect } from "react";
 import Link from "next/link";
 import { usePlan } from "@/context/PlanContext";
 import ListedWorkoutCard from "@/components/shared/listedworkcard";
@@ -32,9 +32,26 @@ export default function MyPlanPage() {
 
   const [activeTab, setActiveTab] = useState<"plan" | "saved">("plan");
   const [sortBy, setSortBy] = useState<SortOption>("duration");
+  const [isTabLoading, setIsTabLoading] = useState<boolean>(false);
   const mounted = useIsMounted();
 
+  const handleTabChange = (tab: "plan" | "saved") => {
+    if (tab === activeTab) return;
+    setIsTabLoading(true);
+    setActiveTab(tab);
+  };
+
+  useEffect(() => {
+    if (isTabLoading) {
+      const timer = setTimeout(() => {
+        setIsTabLoading(false);
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [isTabLoading]);
+
   const currentList = activeTab === "plan" ? todayPlan : savedPlan;
+
   const sortedList = useMemo(() => {
     return [...currentList].sort((a, b) => {
       if (sortBy === "duration") {
@@ -52,8 +69,19 @@ export default function MyPlanPage() {
     });
   }, [currentList, sortBy]);
 
-  const safeTodayPlan = mounted ? todayPlan : [];
-  const safeSortedList = mounted ? sortedList : [];
+  if (!mounted) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] bg-[#0d0e12]">
+        <div className="h-12 w-12 animate-spin rounded-full border-4 border-slate-800 border-t-[#CCFF00]"></div>
+        <p className="mt-4 text-sm font-semibold text-gray-400 animate-pulse">
+          Loading your plan...
+        </p>
+      </div>
+    );
+  }
+
+  const safeTodayPlan = todayPlan;
+  const safeSortedList = sortedList;
 
   const totalExercises = safeTodayPlan.length;
   const totalMinutes = safeTodayPlan.reduce(
@@ -108,7 +136,7 @@ export default function MyPlanPage() {
       <div className="flex flex-wrap items-center justify-between border-b border-slate-800 gap-4 pb-3">
         <div className="flex gap-6">
           <button
-            onClick={() => setActiveTab("plan")}
+            onClick={() => handleTabChange("plan")}
             className={`font-bold text-sm uppercase transition relative pb-3 ${
               activeTab === "plan"
                 ? "text-[#CCFF00]"
@@ -121,7 +149,7 @@ export default function MyPlanPage() {
             )}
           </button>
           <button
-            onClick={() => setActiveTab("saved")}
+            onClick={() => handleTabChange("saved")}
             className={`font-bold text-sm uppercase transition relative pb-3 ${
               activeTab === "saved"
                 ? "text-[#CCFF00]"
@@ -155,7 +183,14 @@ export default function MyPlanPage() {
         </div>
       </div>
 
-      {safeSortedList.length === 0 ? (
+      {isTabLoading ? (
+        <div className="flex flex-col items-center justify-center py-16 bg-[#15171C] border border-slate-800 rounded-2xl">
+          <div className="h-10 w-10 animate-spin rounded-full border-4 border-slate-800 border-t-[#CCFF00]"></div>
+          <p className="mt-4 text-xs font-semibold text-gray-400 animate-pulse">
+            Loading {activeTab === "plan" ? "Today's Plan" : "Saved Workouts"}...
+          </p>
+        </div>
+      ) : safeSortedList.length === 0 ? (
         <div className="bg-[#15171C] border border-slate-800 rounded-2xl p-12 text-center space-y-4">
           <h3
             className={`${oswald.className} text-xl font-bold text-white uppercase tracking-wider`}

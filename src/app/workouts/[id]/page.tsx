@@ -19,29 +19,51 @@ export default function WorkoutDetailsPage() {
 
   const [workout, setWorkout] = useState<IWorkout | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
   const { addToTodayPlan, saveForLater } = usePlan();
 
   useEffect(() => {
-    if (!id) return;
-    const fetchDetails = async () => {
+    let isMounted = true;
+
+    async function fetchDetails() {
+      if (!id) {
+        if (isMounted) setLoading(false);
+        return;
+      }
+
       try {
-        setLoading(true);
-        // cache: "no-store" যোগ করায় Netlify বা Localhost কখনই পুরোনো ক্যাশ ডেটা দেখাবে না
         const res = await fetch(`https://api.abcz.workers.dev/api/fitlog/${id}`, {
           cache: "no-store",
         });
-        if (!res.ok) throw new Error("Failed to fetch details");
+
+        if (!res.ok) {
+          throw new Error("Failed to fetch workout details");
+        }
+
         const data: IWorkout = await res.json();
-        setWorkout(data);
+        if (isMounted) {
+          setWorkout(data);
+          setError(null);
+        }
       } catch (err) {
         console.error("Error fetching detail:", err);
-        setWorkout(null);
+        if (isMounted) {
+          setError("Workout details could not be loaded.");
+          setWorkout(null);
+        }
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
-    };
+    }
 
     fetchDetails();
+
+    return () => {
+      isMounted = false;
+    };
   }, [id]);
 
   if (loading) {
@@ -55,10 +77,10 @@ export default function WorkoutDetailsPage() {
     );
   }
 
-  if (!workout) {
+  if (error || !workout) {
     return (
       <div className="py-24 text-center font-sans text-gray-400 bg-[#0d0e12]">
-        Workout details not found.
+        {error || "Workout details not found."}
       </div>
     );
   }
@@ -87,7 +109,6 @@ export default function WorkoutDetailsPage() {
     <div className="bg-[#0d0e12] min-h-screen text-white">
       <div className="container mx-auto px-4 py-10 md:py-16 max-w-6xl">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
-          
           <div className="relative aspect-square w-full rounded-2xl overflow-hidden border border-slate-800/80 bg-[#15171C]">
             <Image
               src={workout.image || "/banner.png"}
@@ -125,39 +146,57 @@ export default function WorkoutDetailsPage() {
 
             <div className="rounded-xl border border-slate-800/80 bg-[#15171C] p-4 divide-y divide-slate-800/60 text-xs font-sans">
               <div className="flex justify-between py-2.5">
-                <span className="text-gray-400 font-bold uppercase tracking-wider text-[11px]">EQUIPMENT</span>
+                <span className="text-gray-400 font-bold uppercase tracking-wider text-[11px]">
+                  EQUIPMENT
+                </span>
                 <span className="text-white font-semibold">
                   {workout.equipment || "Barbell, Bench"}
                 </span>
               </div>
               <div className="flex justify-between py-2.5">
-                <span className="text-gray-400 font-bold uppercase tracking-wider text-[11px]">DIFFICULTY</span>
+                <span className="text-gray-400 font-bold uppercase tracking-wider text-[11px]">
+                  DIFFICULTY
+                </span>
                 <span className="text-[#CCFF00] font-semibold">
                   {workout.difficulty || "Intermediate"}
                 </span>
               </div>
               <div className="flex justify-between py-2.5">
-                <span className="text-gray-400 font-bold uppercase tracking-wider text-[11px]">SETS</span>
-                <span className="text-white font-semibold">{workout.sets || 4}</span>
+                <span className="text-gray-400 font-bold uppercase tracking-wider text-[11px]">
+                  SETS
+                </span>
+                <span className="text-white font-semibold">
+                  {workout.sets || 4}
+                </span>
               </div>
               <div className="flex justify-between py-2.5">
-                <span className="text-gray-400 font-bold uppercase tracking-wider text-[11px]">REPS</span>
-                <span className="text-white font-semibold">{workout.reps || "8-12"}</span>
+                <span className="text-gray-400 font-bold uppercase tracking-wider text-[11px]">
+                  REPS
+                </span>
+                <span className="text-white font-semibold">
+                  {workout.reps || "8-12"}
+                </span>
               </div>
               <div className="flex justify-between py-2.5">
-                <span className="text-gray-400 font-bold uppercase tracking-wider text-[11px]">DURATION</span>
+                <span className="text-gray-400 font-bold uppercase tracking-wider text-[11px]">
+                  DURATION
+                </span>
                 <span className="text-white font-semibold">
                   {workout.duration || 25} min
                 </span>
               </div>
               <div className="flex justify-between py-2.5">
-                <span className="text-gray-400 font-bold uppercase tracking-wider text-[11px]">CALORIES</span>
+                <span className="text-gray-400 font-bold uppercase tracking-wider text-[11px]">
+                  CALORIES
+                </span>
                 <span className="text-white font-semibold">
                   {workout.caloriesBurned ?? workout.calories ?? 180} kcal
                 </span>
               </div>
               <div className="flex justify-between py-2.5">
-                <span className="text-gray-400 font-bold uppercase tracking-wider text-[11px]">RATING</span>
+                <span className="text-gray-400 font-bold uppercase tracking-wider text-[11px]">
+                  RATING
+                </span>
                 <span className="text-white font-semibold">
                   {workout.rating || 4.8} / 5.0
                 </span>
@@ -198,7 +237,6 @@ export default function WorkoutDetailsPage() {
               </button>
             </div>
           </div>
-
         </div>
       </div>
     </div>

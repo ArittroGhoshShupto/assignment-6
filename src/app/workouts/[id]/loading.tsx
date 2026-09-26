@@ -3,10 +3,10 @@ import React from "react";
 export default function WorkoutDetailLoading() {
   return (
     <div className="container mx-auto px-4 py-10 max-w-4xl min-h-[70vh] animate-pulse">
-      {/* Skeleton Top Bar / Back Button */}
+      
       <div className="w-24 h-6 bg-slate-800 rounded-lg mb-6" />
 
-      {/* Skeleton Main Card */}
+     
       <div className="bg-[#15171C] border border-slate-800 rounded-2xl p-6 sm:p-8 space-y-6">
         <div className="h-64 sm:h-80 w-full bg-slate-800 rounded-xl" />
         
