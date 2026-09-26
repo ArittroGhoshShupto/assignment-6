@@ -16,28 +16,28 @@ interface PlanContextType {
 
 const PlanContext = createContext<PlanContextType | undefined>(undefined);
 
-// Helper function for lazy initialization (Runs only once on client mount)
-const getStorageItem = <T,>(key: string, defaultValue: T): T => {
-  if (typeof window === "undefined") return defaultValue;
+// Helper function to safely read localStorage synchronously
+const getInitialData = <T,>(key: string, fallback: T): T => {
+  if (typeof window === "undefined") return fallback;
   try {
     const item = localStorage.getItem(key);
-    return item ? JSON.parse(item) : defaultValue;
-  } catch (e) {
-    console.error(`Error reading ${key} from localStorage:`, e);
-    return defaultValue;
+    return item ? JSON.parse(item) : fallback;
+  } catch (error) {
+    console.error(`Error reading ${key} from localStorage`, error);
+    return fallback;
   }
 };
 
 export const PlanProvider = ({ children }: { children: React.ReactNode }) => {
-  // Lazy initial state - Reads localStorage directly on mount (No Effect needed)
+  // Pass initializer function directly inside useState to avoid calling setState in useEffect
   const [todayPlan, setTodayPlan] = useState<IWorkout[]>(() =>
-    getStorageItem("fitlog_today", [])
+    getInitialData("fitlog_today", [])
   );
   const [savedPlan, setSavedPlan] = useState<IWorkout[]>(() =>
-    getStorageItem("fitlog_saved", [])
+    getInitialData("fitlog_saved", [])
   );
 
-  // Sync to LocalStorage ONLY when state changes
+  // Sync state to localStorage only when state changes
   useEffect(() => {
     localStorage.setItem("fitlog_today", JSON.stringify(todayPlan));
   }, [todayPlan]);
@@ -55,7 +55,7 @@ export const PlanProvider = ({ children }: { children: React.ReactNode }) => {
       toast.error("Already in today's plan!");
       return;
     }
-    setTodayPlan((prev) => [...prev, { ...workout, isDone: false }]);
+    setTodayPlan((prev) => [...prev, workout]);
     toast.success("Added to today's plan!");
   };
 
@@ -65,19 +65,8 @@ export const PlanProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const toggleMarkAsDone = (id: string | number) => {
-    let updatedState = false;
-
-    setTodayPlan((prev) =>
-      prev.map((item) => {
-        if (item.id === id) {
-          updatedState = !item.isDone;
-          return { ...item, isDone: updatedState };
-        }
-        return item;
-      })
-    );
-
-    toast.success(updatedState ? "Marked as Done!" : "Unmarked status");
+    setTodayPlan((prev) => prev.filter((item) => item.id !== id));
+    toast.success("Workout marked as completed!");
   };
 
   const saveForLater = (workout: IWorkout) => {

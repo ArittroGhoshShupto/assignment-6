@@ -26,12 +26,16 @@ export default function WorkoutDetailsPage() {
     const fetchDetails = async () => {
       try {
         setLoading(true);
-        const res = await fetch(`https://api.abcz.workers.dev/api/fitlog/${id}`);
+        // cache: "no-store" যোগ করায় Netlify বা Localhost কখনই পুরোনো ক্যাশ ডেটা দেখাবে না
+        const res = await fetch(`https://api.abcz.workers.dev/api/fitlog/${id}`, {
+          cache: "no-store",
+        });
         if (!res.ok) throw new Error("Failed to fetch details");
         const data: IWorkout = await res.json();
         setWorkout(data);
       } catch (err) {
         console.error("Error fetching detail:", err);
+        setWorkout(null);
       } finally {
         setLoading(false);
       }
@@ -84,18 +88,17 @@ export default function WorkoutDetailsPage() {
       <div className="container mx-auto px-4 py-10 md:py-16 max-w-6xl">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
           
-          {/* Left Side Image */}
           <div className="relative aspect-square w-full rounded-2xl overflow-hidden border border-slate-800/80 bg-[#15171C]">
             <Image
               src={workout.image || "/banner.png"}
               alt={workout.name || "Workout Image"}
               fill
               priority
+              sizes="(max-width: 768px) 100vw, 50vw"
               className="object-cover"
             />
           </div>
 
-          {/* Right Side Info */}
           <div className="space-y-6">
             <div>
               <h1
@@ -108,7 +111,6 @@ export default function WorkoutDetailsPage() {
                   "A compound press that builds chest thickness, triceps, and pressing power from a stable bench."}
               </p>
 
-              {/* Categories / Tags */}
               <div className="flex flex-wrap gap-2 mt-4">
                 {categories.map((cat: string, idx: number) => (
                   <span
@@ -121,7 +123,6 @@ export default function WorkoutDetailsPage() {
               </div>
             </div>
 
-            {/* Specs Table */}
             <div className="rounded-xl border border-slate-800/80 bg-[#15171C] p-4 divide-y divide-slate-800/60 text-xs font-sans">
               <div className="flex justify-between py-2.5">
                 <span className="text-gray-400 font-bold uppercase tracking-wider text-[11px]">EQUIPMENT</span>
@@ -131,7 +132,7 @@ export default function WorkoutDetailsPage() {
               </div>
               <div className="flex justify-between py-2.5">
                 <span className="text-gray-400 font-bold uppercase tracking-wider text-[11px]">DIFFICULTY</span>
-                <span className="text-white font-semibold">
+                <span className="text-[#CCFF00] font-semibold">
                   {workout.difficulty || "Intermediate"}
                 </span>
               </div>
@@ -158,12 +159,11 @@ export default function WorkoutDetailsPage() {
               <div className="flex justify-between py-2.5">
                 <span className="text-gray-400 font-bold uppercase tracking-wider text-[11px]">RATING</span>
                 <span className="text-white font-semibold">
-                  {workout.rating || 4.8}
+                  {workout.rating || 4.8} / 5.0
                 </span>
               </div>
             </div>
 
-            {/* Instructions */}
             <div className="space-y-3 font-sans">
               <h3
                 className={`${oswald.className} text-base font-bold uppercase tracking-wider text-white`}
@@ -183,7 +183,6 @@ export default function WorkoutDetailsPage() {
               </ol>
             </div>
 
-            {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-3 pt-2">
               <button
                 onClick={() => addToTodayPlan(workout)}
