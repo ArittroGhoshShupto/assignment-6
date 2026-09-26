@@ -16,7 +16,7 @@ interface PlanContextType {
 
 const PlanContext = createContext<PlanContextType | undefined>(undefined);
 
-// Helper function to safely read localStorage synchronously
+
 const getInitialData = <T,>(key: string, fallback: T): T => {
   if (typeof window === "undefined") return fallback;
   try {
@@ -29,7 +29,7 @@ const getInitialData = <T,>(key: string, fallback: T): T => {
 };
 
 export const PlanProvider = ({ children }: { children: React.ReactNode }) => {
-  // Pass initializer function directly inside useState to avoid calling setState in useEffect
+ 
   const [todayPlan, setTodayPlan] = useState<IWorkout[]>(() =>
     getInitialData("fitlog_today", [])
   );
