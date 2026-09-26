@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -40,7 +41,7 @@ const WorkoutLibrary = () => {
     const fetchWorkouts = async () => {
       try {
         setLoading(true);
-        const response = await fetch("https://api.abcz.workers.dev/api/fitlog");
+        const response = await fetch("https://api.api-store.workers.dev/api/fitlog");
         if (!response.ok) {
           throw new Error("Failed to fetch");
         }
