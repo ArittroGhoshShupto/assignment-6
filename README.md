@@ -1,4 +1,4 @@
-#  FitLog
+# FitLog
 
 FitLog is a simple workout app where users can find exercises, create a workout plan, and save their favorite workouts.
 
@@ -9,7 +9,7 @@ FitLog is a simple workout app where users can find exercises, create a workout 
 * TypeScript
 * Tailwind CSS
 * Google Fonts
-* React Toastify
+* React Hot Toast
 * API
 
 ## Key Features
@@ -20,4 +20,3 @@ FitLog is a simple workout app where users can find exercises, create a workout 
 4. Users can save their favorite exercises for later.
 5. Users can see their total workout time and estimated calories.
 6. Workout plans and saved exercises stay after refreshing the page.
-
