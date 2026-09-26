@@ -37,7 +37,7 @@ export const PlanProvider = ({ children }: { children: React.ReactNode }) => {
     getInitialData("fitlog_saved", [])
   );
 
-  // Sync state to localStorage only when state changes
+ 
   useEffect(() => {
     localStorage.setItem("fitlog_today", JSON.stringify(todayPlan));
   }, [todayPlan]);
