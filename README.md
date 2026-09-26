@@ -2,7 +2,7 @@
 
 FitLog is a simple workout app where users can find exercises, create a workout plan, and save their favorite workouts.
 
-## Technologies Used
+# Technologies Used
 
 * Next.js
 * React
@@ -12,7 +12,7 @@ FitLog is a simple workout app where users can find exercises, create a workout 
 * React Hot Toast
 * API
 
-## Key Features
+#  Key Features
 
 1. Users can browse different exercises.
 2. Users can see workout details.
